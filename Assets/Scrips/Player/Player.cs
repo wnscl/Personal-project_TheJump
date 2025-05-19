@@ -30,7 +30,6 @@ public class Player : MonoBehaviour
     {
         PlayerMove();
         PlayerLook();
-
     }
 
     public void PlayerMove()
@@ -100,11 +99,8 @@ public class Player : MonoBehaviour
     public void PlayerJump()
     {
         //리지드바디 애드포스는 결국 벨로시티를 건드린다.
-        isJump = true;
-        if (isJump)
-        {
-            rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-        }
+        anim.SetTrigger("Jumping");
+        rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
     }
     public void OnJump(InputAction.CallbackContext context)
     //유니티입력에서 버튼방식을 선택했을 때 내가 누른키가 뭐고 얼마나 누르고 땟고
@@ -116,6 +112,7 @@ public class Player : MonoBehaviour
         //context.canceled	- 입력이 취소된 순간 (버튼을 땟을 때)
         //context.ReadValue<T>() - 입력된 실제 값 읽기 벡터2 플롯 불 등
         {
+            isJump = true;
             PlayerJump();
         }
     }
