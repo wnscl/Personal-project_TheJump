@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,13 +8,18 @@ public class Player : MonoBehaviour
 {
     [SerializeField] Rigidbody rigid;
     [SerializeField] Animator anim;
+    [SerializeField] Transform camPivot;
+    [SerializeField] Transform realCam;
+    [SerializeField] GameObject playerBody;
 
-    Vector3 moveDirection = Vector3.zero;
+    public Vector3 moveDirection = Vector3.zero;
     [SerializeField] float moveSpeed;
     [SerializeField] float runSpeed;
     [SerializeField] float jumpPower;
     bool isJump = false;
     bool isRun = false;
+
+    public Vector2 viewPos;
 
     private void Awake()
     {
@@ -46,15 +52,19 @@ public class Player : MonoBehaviour
         //입력이 없다면 0이기 때문에 else문이 사용됨
         //즉 입력했느냐 안했느냐를 판별해버림
         {
+            Vector3 lookForward = new Vector3(camPivot.forward.x, 0f, camPivot.forward.z).normalized;
+            Vector3 lookRight = new Vector3(camPivot.right.x, 0f, camPivot.right.z).normalized;
+            Vector3 direction = lookForward * moveDirection.z + lookRight * moveDirection.x;
+
             if (!isRun)
             {
                 anim.SetInteger("MoveNum", 1);
-                rigid.MovePosition(rigid.position + (moveDirection * moveSpeed * Time.deltaTime));
+                rigid.MovePosition(rigid.position + (direction * moveSpeed * Time.deltaTime));
             }
             else
             {
                 anim.SetInteger("MoveNum", 2);
-                rigid.MovePosition(rigid.position + (moveDirection * runSpeed * Time.deltaTime));
+                rigid.MovePosition(rigid.position + (direction * runSpeed * Time.deltaTime));
             }
             //rigid.velocity = new Vector3(moveDirection.x * moveSpeed, rigid.velocity.y, moveDirection.z * moveSpeed);
             //rigid.velocity += moveDirection * moveSpeed * Time.deltaTime;
@@ -67,20 +77,80 @@ public class Player : MonoBehaviour
     }
     public void PlayerLook()
     {
-        float angle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
-        //transform.rotation = Quaternion.Euler(0, angle, 0);
-        Quaternion targetRot = Quaternion.Euler(0, angle, 0);
-        if (moveDirection != Vector3.zero)
+        //Vector3 camAngle = realCam.rotation.eulerAngles;
+        //float camAngleX = camAngle.x - viewPos.y;
+        //realCam.rotation = Quaternion.Euler(camAngle.x - viewPos.y, camAngle.y + viewPos.x, camAngle.z);
+        //float angle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+
+        Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        //인풋시스템이 아닌 옛날 방식은 -1 ~ 1 이내로 값이 나옴
+        //그러나 인풋시스템은 1920, 1080같이 값이 엄청나기 때문에 곱하지 않고 회전에 반영시 급격이 튐
+        Vector3 camAngle = camPivot.rotation.eulerAngles;
+        float camAngleX = camAngle.x - mouseDelta.y;
+
+        if (camAngleX < 180f)
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 10f * Time.deltaTime);
+            camAngleX = Mathf.Clamp(camAngleX, -15f, 45f);
+
         }
+        else
+        {
+            camAngleX = Mathf.Clamp(camAngleX, 335f, 361f);
+        }
+
+
+        camPivot.rotation = Quaternion.Euler(camAngleX, camAngle.y + mouseDelta.x, camAngle.z);
+
+        //Vector3 viewDir = (transform.position - camPivot.position).normalized;
+
+        float angle = camPivot.eulerAngles.y;
+        //eulerAngles 공부
+        playerBody.transform.rotation = Quaternion.Euler(0, angle, 0);
+
+        //Vector2 playerPos = new Vector2(playerBody.transform.position.x, playerBody.transform.position.z);
+        //Vector2 camPos = new Vector2(realCam.transform.position.x, realCam.transform.position.z);
+        //moveDirection = playerPos - camPos;
+        
+
+
+        //float angle = Mathf.Atan2(viewDir.z, viewDir.x);
+        //transform.rotation = Quaternion.Euler(0, angle, 0);
+        //transform.rotation = Quaternion.LookRotation(viewDir);
+
+
+        //transform.rotation = Quaternion.Euler(0, angle, 0);
+        //Quaternion targetRot = Quaternion.Euler(0, angle, 0);
+        //if (moveDirection != Vector3.zero)
+        //{
+        //    transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 10f * Time.deltaTime);
+        //}
         //transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, 10f * Time.deltaTime);
     }
+
     public void OnMove(InputAction.CallbackContext context) //InputValue value)
     {
         Vector2 input = context.ReadValue<Vector2>();
 
-        moveDirection = new Vector3(input.x, 0, input.y);
+        moveDirection = new Vector3(input.x, 0f, input.y);
+        //Vector3 forward = realCam.forward;
+        //Debug.Log(forward);
+        //Vector3 right = realCam.right;
+        //Debug.Log(right);
+        //forward.y = 0;
+        //Debug.Log(forward);
+        //right.y = 0;
+        //Debug.Log(right);
+        //forward.Normalize();
+        //right.Normalize();
+        //Vector3 moveInput = new Vector3(input.x, 0, input.y);
+
+        //moveDirection = (forward * moveInput.z + right * moveInput.x).normalized;
+
+        //Vector3 playerPos = new Vector3(playerBody.transform.position.x, 0 , playerBody.transform.position.z);
+        //Vector3 camPos = new Vector3(realCam.transform.position.x, 0 ,realCam.transform.position.z);
+        //moveDirection = (playerPos - camPos).normalized;
+
+        //moveDirection = new Vector3(input.x, 0, input.y);
         //direction = value.Get<Vector2>();
         //여기서 이미 입력한 값을 정규화해서 가지고 옴
         //그렇기에 대각선 이동에 관한 예외처리를 하지 않아도 됨
@@ -127,5 +197,6 @@ public class Player : MonoBehaviour
             isRun = false;
         }
     }
+
 
 }
