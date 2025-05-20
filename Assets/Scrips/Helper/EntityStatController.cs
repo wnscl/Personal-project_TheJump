@@ -13,4 +13,7 @@ public class EntityStatController : MonoBehaviour
     [SerializeField] protected int maxHp;
     public int Hp { get { return hp; } } //차후 카메라 값을 프로퍼티로 하면 편할듯
     public int MaxHp { get { return maxHp; } }
+
+    [SerializeField] protected int sp;
+    public int Sp { get { return sp; } }    
 }
