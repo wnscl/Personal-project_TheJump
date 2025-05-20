@@ -4,22 +4,23 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : EntityStatController
 {
     [SerializeField] Rigidbody rigid;
     [SerializeField] Animator anim;
     [SerializeField] Transform camPivot;
     [SerializeField] Transform realCam;
     [SerializeField] GameObject playerBody;
-
-    public Vector3 moveDirection = Vector3.zero;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float runSpeed;
-    [SerializeField] float jumpPower;
-    bool isJump = false;
-    bool isRun = false;
+    [SerializeField] LayerMask ground;
 
     public Vector2 viewPos;
+    bool isRun = false;
+    //public int Hp { get { return hp; } } //차후 카메라 값을 프로퍼티로 하면 편할듯
+
+
+
+    //레이만들고 배열처럼 가지고 
+    //플레이어 캐릭터와는 레이가 충돌이 안되게
 
     private void Awake()
     {
@@ -34,10 +35,49 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (anim.GetBool("isJump"))
+        {
+            Invoke("Jumping", 0.2f);
+        }
+
         PlayerMove();
         PlayerLook();
     }
 
+    void Jumping()
+    {
+        bool isGround = CheckTheGround();
+        if (isGround)
+        {
+            anim.SetBool("isJump", false);
+        }
+        else
+        {
+            return;
+        }
+    }
+    public bool CheckTheGround()
+    {
+        Ray[] groundCheckRay = new Ray[4]
+        {
+            new Ray(playerBody.transform.position + (transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down),
+            new Ray(playerBody.transform.position + (-transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down),
+            new Ray(playerBody.transform.position + (transform.right * 0.2f) + (transform.up * 0.01f), Vector3.down),
+            new Ray(playerBody.transform.position + (-transform.right * 0.2f) +(transform.up * 0.01f), Vector3.down)
+        };
+
+
+        for (int i = 0; i < groundCheckRay.Length; i++)
+        {
+            Debug.DrawRay(groundCheckRay[i].origin, groundCheckRay[i].direction * 0.05f, Color.red);
+            if (Physics.Raycast(groundCheckRay[i], 0.05f, ground))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public void PlayerMove()
     {
         if (moveDirection != Vector3.zero)
@@ -176,14 +216,20 @@ public class Player : MonoBehaviour
     //유니티입력에서 버튼방식을 선택했을 때 내가 누른키가 뭐고 얼마나 누르고 땟고
     //몇초간 눌럿는지 같은 정보를 함수로 담아서 보내주는 것이 CallbackContext
     {
-        if (context.performed)
+        bool isGround = CheckTheGround();
+
+        if (context.performed && isGround && !anim.GetBool("isJump"))
         //.performed - 입력이 정확히 실행된 시점에 (누른 순간)
         //context.started - 입력이 시작된 순간부터 (누르기시작)
         //context.canceled	- 입력이 취소된 순간 (버튼을 땟을 때)
         //context.ReadValue<T>() - 입력된 실제 값 읽기 벡터2 플롯 불 등
         {
-            isJump = true;
+            anim.SetBool("isJump", true);
             PlayerJump();
+        }
+        else
+        {
+            return ;
         }
     }
     public void OnRun(InputAction.CallbackContext context)
@@ -198,5 +244,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        if (hp <= 0)
+        {
+            return;
+        }
+        else
+        {
+            hp -= damage;
+        }
+    }
 
 }
