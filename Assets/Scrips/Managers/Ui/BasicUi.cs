@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 
-public class BasicUi : MonoBehaviour
+public class BasicUi : BaseUi
 {
     [SerializeField] UnityEngine.UI.Slider[] statSlider;
     [SerializeField] Text[] statText;

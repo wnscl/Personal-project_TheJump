@@ -12,10 +12,12 @@ public abstract class TestUi : MonoBehaviour
     {
         cg = GetComponent<CanvasGroup>();
     }
+
     public void Open()
     {
         gameObject.SetActive(true);
     }
+
     public void Close(bool kill = false)//옵셔널 파라미터
         //기본값 지정
     {

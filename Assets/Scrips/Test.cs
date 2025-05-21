@@ -24,7 +24,7 @@ public class Test : MonoBehaviour
 
         Debug.Log($"리스트의 첫번째 요소는? {studyList[0]}");
 
-        UiManager.Instance.Open<TheUi>();
+        //UiManager.Instance.Open<TheUi>();
     }
 
     

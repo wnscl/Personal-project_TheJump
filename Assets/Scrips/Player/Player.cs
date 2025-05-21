@@ -13,7 +13,9 @@ public class Player : EntityStatController
     [SerializeField] PlayerCameraController cam;
 
     [SerializeField] LayerMask ground;
+    [SerializeField] LayerMask npc;
     bool isRun = false;
+    bool interctionMode = false;
 
 
     //public int Hp { get { return hp; } } //차후 카메라 값을 프로퍼티로 하면 편할듯
@@ -35,12 +37,17 @@ public class Player : EntityStatController
         {
             Invoke("Jumping", 0.2f);
         }
-
-        PlayerMove();
+        if (!interctionMode)
+        {
+            PlayerMove();
+        }
     }
     private void LateUpdate()
     {
-        cam.PlayerLook();
+        if (!interctionMode)
+        {
+            cam.PlayerLook();
+        }
     }
 
     void Jumping()
@@ -96,7 +103,7 @@ public class Player : EntityStatController
         }
         else
         {
-            anim.SetInteger("MoveNum", 0);
+            anim.SetInteger("MoveNum", 0);  
         }
     }
 
@@ -143,6 +150,28 @@ public class Player : EntityStatController
         else if (context.canceled)
         {
             isRun = false;
+        }
+    }
+    public void OnInterction(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ShotInterction();
+        }
+    }
+    private void ShotInterction()
+    {
+        Vector3 direction = cam.LookForward;
+
+        Ray talkRay = new Ray(playerBody.transform.position + (transform.up * 1f), direction);
+        Debug.DrawRay(talkRay.origin, talkRay.direction * 2f, Color.red, 4f);
+
+        if (Physics.Raycast(talkRay, 2f, npc))
+        {
+            interctionMode = true;
+            anim.SetInteger("MoveNum", 0);
+            UiManager.Instance.PlayerUiInterctionOrder("NpcOpen");
+            Debug.Log("npc와 대화");
         }
     }
 

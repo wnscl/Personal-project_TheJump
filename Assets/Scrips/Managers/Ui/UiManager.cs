@@ -10,14 +10,15 @@ public class UiManager : MonoBehaviour
 
     public Player player;
 
+    [SerializeField] BaseUi basicUi;
+    [SerializeField] BaseUi npcUi;
+    public int uiIdx = 0;
+    //public bool interctionMode = false;
+
+
     Dictionary<string, TestUi> _uiList = new();
     //key-value 키-값을 쌍으로 저장하는 컬렉션의 한 종류
     //키값 중복되면 안됨 (고유의 값이여야함)
-
-    private string GetUiName<T>() where T : TestUi
-    {
-        return typeof(T).Name;
-    }
 
     private void Awake()
     {
@@ -40,13 +41,35 @@ public class UiManager : MonoBehaviour
         }
     }
 
+    public void PlayerUiInterctionOrder(string order)
+    {
+        basicUi.Close();
+        npcUi.Close(); 
+
+
+        switch (order)
+        {
+            case "NpcOpen":
+                Debug.Log("npc대화창 오픈");
+                npcUi.Open();
+                break;
+            case "NpcClose":
+                Debug.Log("npc대화창 클로스");
+                npcUi.Close();
+                break;
+        }
+
+    }
 
     void TestDamage()
     {
         player.TakeDamage(10);    
     }
 
-
+    /*private string GetUiName<T>() where T : TestUi
+    {
+        return typeof(T).Name;
+    }
     public T Open<T>() where T : TestUi //타입제한자
     {
         string uiName = GetUiName<T>();
@@ -87,7 +110,6 @@ public class UiManager : MonoBehaviour
             _uiList.Remove(uiName);
         }
     }
-
     public bool TryGet<T>(out T ui) where T : TestUi
     {
         ui = null;
@@ -101,7 +123,7 @@ public class UiManager : MonoBehaviour
         ui = savedUi as T;
 
         return true;
-    }
+    }*/
 
 
 
