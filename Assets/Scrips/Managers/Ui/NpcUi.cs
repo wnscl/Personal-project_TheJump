@@ -37,6 +37,7 @@ public class NpcUi : BaseUi
             Array.Resize(ref dialogData, npc.dialog.Length);
         }
 
+        this.npc = npc;
         npcImage.sprite = npc.photo;
         npcNameText.text = npc.name;
 
@@ -49,5 +50,6 @@ public class NpcUi : BaseUi
     public void InitInfo()
     {
         talkIdx = 0;
+        this.npc = null;
     }
 }

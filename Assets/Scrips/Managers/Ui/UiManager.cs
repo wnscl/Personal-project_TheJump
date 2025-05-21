@@ -46,17 +46,17 @@ public class UiManager : MonoBehaviour
         basicUi.Close();
         npcUi.Close(); 
 
-
         switch (order)
         {
             case "NpcOpen":
                 Debug.Log("npc대화창 오픈");
-                npc.InterctionStart();  
+                npc.NowInterction(true);  
                 npcUi.SetNpcUiInfo(npc);
                 npcUi.Open();
                 break;
             case "NpcClose":
                 Debug.Log("npc대화창 클로스");
+                npc.NowInterction(false);
                 npcUi.InitInfo();
                 npcUi.Close();
                 player.interctionMode = false;
