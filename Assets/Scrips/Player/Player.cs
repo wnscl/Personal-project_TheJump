@@ -11,11 +11,12 @@ public class Player : EntityStatController
     [SerializeField] GameObject playerBody;
 
     [SerializeField] PlayerCameraController cam;
+    [SerializeField] BasicNpc interctionTarget;
 
     [SerializeField] LayerMask ground;
     [SerializeField] LayerMask npc;
     bool isRun = false;
-    bool interctionMode = false;
+    public bool interctionMode = false;
 
 
     //public int Hp { get { return hp; } } //차후 카메라 값을 프로퍼티로 하면 편할듯
@@ -164,13 +165,24 @@ public class Player : EntityStatController
         Vector3 direction = cam.LookForward;
 
         Ray talkRay = new Ray(playerBody.transform.position + (transform.up * 1f), direction);
+        //쏘는 광선 방향성과 시작점을 가짐
+        RaycastHit target;
+        //광선이 오브젝트에 닿으면 그 결과를 저장하는 구조체
+        //무엇에 닿았는가 어디에 닿았는가 무엇을 통해 닿았는가
+        //target.point      광선이 맞은 월드 좌표
+        //target.normal     맞은 표면의 법선 벡터
+        //target.distance   발사점으로부터 충돌 지점까지의 거리
+        //target.collider   맞은 오브젝트의 Collider
+        //target.transform  맞은 오브젝트의 Transform
+        //target.rigidbody  맞은 오브젝트의 Rigidbody (있다면)
         Debug.DrawRay(talkRay.origin, talkRay.direction * 2f, Color.red, 4f);
 
-        if (Physics.Raycast(talkRay, 2f, npc))
+        if (Physics.Raycast(talkRay,out target, 2f, npc))
         {
             interctionMode = true;
             anim.SetInteger("MoveNum", 0);
-            UiManager.Instance.PlayerUiInterctionOrder("NpcOpen");
+            interctionTarget = target.collider.GetComponent<BasicNpc>();
+            UiManager.Instance.PlayerUiInterctionOrder("NpcOpen", interctionTarget);
             Debug.Log("npc와 대화");
         }
     }

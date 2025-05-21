@@ -11,7 +11,7 @@ public class UiManager : MonoBehaviour
     public Player player;
 
     [SerializeField] BaseUi basicUi;
-    [SerializeField] BaseUi npcUi;
+    [SerializeField] NpcUi npcUi;
     public int uiIdx = 0;
     //public bool interctionMode = false;
 
@@ -41,7 +41,7 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    public void PlayerUiInterctionOrder(string order)
+    public void PlayerUiInterctionOrder(string order, BasicNpc npc)
     {
         basicUi.Close();
         npcUi.Close(); 
@@ -51,11 +51,15 @@ public class UiManager : MonoBehaviour
         {
             case "NpcOpen":
                 Debug.Log("npc대화창 오픈");
+                npc.InterctionStart();  
+                npcUi.SetNpcUiInfo(npc);
                 npcUi.Open();
                 break;
             case "NpcClose":
                 Debug.Log("npc대화창 클로스");
+                npcUi.InitInfo();
                 npcUi.Close();
+                player.interctionMode = false;
                 break;
         }
 

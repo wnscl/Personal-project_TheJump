@@ -415,7 +415,6 @@ GameObject:
   - component: {fileID: 433824151}
   - component: {fileID: 433824150}
   - component: {fileID: 433824153}
-  - component: {fileID: 433824152}
   m_Layer: 7
   m_Name: NpcLuna
   m_TagString: Untagged
@@ -462,27 +461,6 @@ Transform:
   - {fileID: 1033934716}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &433824152
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 433824149}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5, y: 5, z: 5}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &433824153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,6 +477,7 @@ MonoBehaviour:
   dialog:
   - "\uC548\uB155 \uB0B4 \uC774\uB984\uC740 \uB8E8\uB098"
   - "\uD544\uC218 \uAD6C\uD604 \uAE30\uB2A5\uC740 \uB2E4 \uB05D\uB0C8\uB2C8?"
+  photo: {fileID: 21300000, guid: 9d986f49ce6cd534192f14632e916df7, type: 3}
   anim: {fileID: 0}
 --- !u!1 &443812672
 GameObject:
@@ -531,8 +510,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isOpen: 0
   npcImage: {fileID: 650383340}
-  npcName: {fileID: 0}
-  textData: []
+  npcNameText: {fileID: 468279970}
+  talkText: {fileID: 1236981645}
+  npc: {fileID: 0}
+  dialogData: []
 --- !u!4 &443812674
 Transform:
   m_ObjectHideFlags: 0
@@ -973,6 +954,7 @@ MonoBehaviour:
   anim: {fileID: 1378461603}
   playerBody: {fileID: 725031829}
   cam: {fileID: 565827502}
+  interctionTarget: {fileID: 0}
   ground:
     serializedVersion: 2
     m_Bits: 64
