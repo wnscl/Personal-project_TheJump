@@ -118,11 +118,11 @@ public class Player : EntityStatController
         moveDirection = new Vector3(input.x, 0f, input.y);
 
     }
-    public void PlayerJump()
+    public void PlayerJump(float jumpP)
     {
         //리지드바디 애드포스는 결국 벨로시티를 건드린다.
         anim.SetTrigger("Jumping");
-        rigid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        rigid.AddForce(Vector3.up * (jumpPower * jumpP), ForceMode.Impulse);
     }
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -135,7 +135,7 @@ public class Player : EntityStatController
         //context.ReadValue<T>() - 입력된 실제 값 읽기 벡터2 플롯 불 등
         {
             anim.SetBool("isJump", true);
-            PlayerJump();
+            PlayerJump(1);
         }
         else
         {
