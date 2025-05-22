@@ -35,7 +35,7 @@ public class UiManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown("1"))
+        if (Input.GetKeyDown("7"))
         {
             TestDamage();
         }

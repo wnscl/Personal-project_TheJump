@@ -12,6 +12,7 @@ public class Player : EntityStatController
 
     [SerializeField] PlayerCameraController cam;
     [SerializeField] BasicNpc interctionTarget;
+    [SerializeField] PlayerInventory inventory;
 
     [SerializeField] LayerMask ground;
     [SerializeField] LayerMask npc;
@@ -110,7 +111,6 @@ public class Player : EntityStatController
 
     //플레이어 룩 있던 자리
 
-
     public void OnMove(InputAction.CallbackContext context)
     {
         Vector2 input = context.ReadValue<Vector2>();
@@ -162,7 +162,7 @@ public class Player : EntityStatController
     }
     private void ShotInterction()
     {
-        Vector3 direction = cam.LookForward;
+        Vector3 direction = cam.CamPivot.forward;
 
         Ray talkRay = new Ray(playerBody.transform.position + (transform.up * 1f), direction);
         //쏘는 광선 방향성과 시작점을 가짐
@@ -175,9 +175,9 @@ public class Player : EntityStatController
         //target.collider   맞은 오브젝트의 Collider
         //target.transform  맞은 오브젝트의 Transform
         //target.rigidbody  맞은 오브젝트의 Rigidbody (있다면)
-        Debug.DrawRay(talkRay.origin, talkRay.direction * 2f, Color.red, 4f);
-
-        if (Physics.Raycast(talkRay,out target, 2f, npc))
+        Debug.DrawRay(talkRay.origin, talkRay.direction * 2.5f, Color.red, 4f);
+         
+        if (Physics.Raycast(talkRay,out target, 2.5f, npc))
         {
             interctionMode = true;
             anim.SetInteger("MoveNum", 0);
@@ -186,7 +186,27 @@ public class Player : EntityStatController
             Debug.Log("npc와 대화");
         }
     }
+    public void OnItemUse(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
 
+        var keyboard = Keyboard.current;
+
+        if (keyboard.digit1Key.wasPressedThisFrame)
+            inventory.UseAndRemoveItem(1);
+        else if (keyboard.digit2Key.wasPressedThisFrame)
+            inventory.UseAndRemoveItem(2);
+        else if (keyboard.digit3Key.wasPressedThisFrame)
+            inventory.UseAndRemoveItem(3);
+        else if (keyboard.digit4Key.wasPressedThisFrame)
+            inventory.UseAndRemoveItem(4);
+        else if (keyboard.digit5Key.wasPressedThisFrame)
+            inventory.UseAndRemoveItem(5);
+
+        //wasPressedThisFrame 이번 프레임에서 처음 눌렸는가 ? (Edge - triggered)
+        //isPressed   지금 눌려져 있는 상태인가? (누르고 있으면 계속 true)
+        //wasReleasedThisFrame 이번 프레임에서 뗐는가?
+    }
     public void TakeDamage(int damage)
     {
         if (hp <= 0)

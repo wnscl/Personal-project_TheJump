@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerCameraController : MonoBehaviour
 {
     [SerializeField] Transform camPivot;
+    public Transform CamPivot { get => camPivot; }
+
     [SerializeField] Transform realCam;
     [SerializeField] GameObject playerBody;
 

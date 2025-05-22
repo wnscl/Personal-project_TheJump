@@ -10,6 +10,9 @@ public class BasicUi : BaseUi
     [SerializeField] UnityEngine.UI.Slider[] statSlider;
     [SerializeField] Text[] statText;
 
+    [SerializeField] GameObject objInfo;
+    [SerializeField] Text objText;
+
     void Start()
     {
         
@@ -32,5 +35,9 @@ public class BasicUi : BaseUi
     private void UpdatePlayerSp()
     {
 
+    }
+    private void OpenInfo()
+    {
+        
     }
 }
