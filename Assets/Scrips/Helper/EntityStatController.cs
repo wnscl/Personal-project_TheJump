@@ -67,7 +67,6 @@ public class EntityStatController : MonoBehaviour
             yield return new WaitForSeconds(1f);
             moveSpeed -= speed; 
             speed--;
-
         }
         nowCoroutine = null;
         yield break;

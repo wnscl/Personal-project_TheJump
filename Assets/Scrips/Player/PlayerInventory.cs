@@ -28,7 +28,7 @@ public class PlayerInventory : MonoBehaviour
         {
             return;
         }
-        ItemEffectManager.Instance.InjectItemEffect(itemToUse.itemCode);
+        ItemEffectManager.Instance.InjectItemEffect(index);
         itemToUse.UseingItem();
 
         for (int i = index; i < itemCount - 1; i++)

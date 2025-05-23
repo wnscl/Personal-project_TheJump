@@ -16,21 +16,12 @@ public class Player : EntityStatController
 
     [SerializeField] LayerMask ground;
     [SerializeField] LayerMask npc;
+    [SerializeField] LayerMask infoObject;
     bool isRun = false;
     public bool interctionMode = false;
-
+    public float showInfoTime = 0;
 
     //public int Hp { get { return hp; } } //차후 카메라 값을 프로퍼티로 하면 편할듯
-
-    private void Awake()
-    {
-
-    }
-
-    void Start()
-    {
-        
-    }
 
 
     void Update()
@@ -43,6 +34,28 @@ public class Player : EntityStatController
         {
             PlayerMove();
         }
+        if (showInfoTime >= 0.5f)
+        {   
+            Vector3 direction = cam.CamPivot.forward;
+
+            Ray infoRay = new Ray(playerBody.transform.position + (transform.up * 1f), direction);
+            RaycastHit target;
+
+            Debug.DrawRay(infoRay.origin, infoRay.direction * 2.5f, Color.red, 1f);
+
+            if (Physics.Raycast(infoRay, out target, 2.5f, infoObject))
+            {
+                ObjectInfo hitObj = target.collider.GetComponent<ObjectInfo>();
+                UiManager.Instance.PlayerUiShowInfo(hitObj,"Open");
+                showInfoTime = 0;
+            }
+            else
+            {
+                return;
+            }
+        }
+        showInfoTime += Time.deltaTime;
+
     }
     private void LateUpdate()
     {
@@ -50,6 +63,7 @@ public class Player : EntityStatController
         {
             cam.PlayerLook();
         }
+
     }
 
     void Jumping()

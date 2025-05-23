@@ -19,7 +19,7 @@ public class PlayerCameraController : MonoBehaviour
     {
         Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         Vector3 camAngle = camPivot.rotation.eulerAngles;
-        float camAngleX = camAngle.x - mouseDelta.y;
+        float camAngleX = camAngle.x - (mouseDelta.y * 2f);
 
         if (camAngleX < 180f)
         {
@@ -32,7 +32,7 @@ public class PlayerCameraController : MonoBehaviour
         }
 
 
-        camPivot.rotation = Quaternion.Euler(camAngleX, camAngle.y + mouseDelta.x, camAngle.z);
+        camPivot.rotation = Quaternion.Euler(camAngleX, camAngle.y + (mouseDelta.x * 2f), camAngle.z);
         float angle = camPivot.eulerAngles.y;
         //eulerAngles °øºÎ
         playerBody.transform.rotation = Quaternion.Euler(0, angle, 0);

@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpPointer : MonoBehaviour, ICanIntroduce
+public class JumpPointer : ObjectInfo
 {
     [SerializeField] private BoxCollider jumpCol;
     public event Action<Collision> onCollisionEvent;
-
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -39,10 +38,6 @@ public class JumpPointer : MonoBehaviour, ICanIntroduce
 
             onCollisionEvent?.Invoke(collision);
         }
-
-    }
-    public void Introduce()
-    {
 
     }
 }

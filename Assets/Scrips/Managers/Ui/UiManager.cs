@@ -10,7 +10,7 @@ public class UiManager : MonoBehaviour
 
     public Player player;
 
-    [SerializeField] BaseUi basicUi;
+    [SerializeField] BasicUi basicUi;
     [SerializeField] NpcUi npcUi;
     public int uiIdx = 0;
     //public bool interctionMode = false;
@@ -43,7 +43,6 @@ public class UiManager : MonoBehaviour
 
     public void PlayerUiInterctionOrder(string order, BasicNpc npc)
     {
-        basicUi.Close();
         npcUi.Close(); 
 
         switch (order)
@@ -63,6 +62,18 @@ public class UiManager : MonoBehaviour
                 break;
         }
 
+    }
+    public void PlayerUiShowInfo(ObjectInfo obj, string order)
+    {
+        switch (order)
+        {
+            case "Open":
+                basicUi.OpenInfo(obj.info);
+                break;
+            case "Close":
+                basicUi.CloseInfo();
+                break;
+        }
     }
 
     void TestDamage()

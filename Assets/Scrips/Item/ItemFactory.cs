@@ -27,7 +27,8 @@ public class ItemFactory : MonoBehaviour
     {
         if (Input.GetKeyDown("6"))
         {
-            MakeItem(0);
+            int num = UnityEngine.Random.Range(0, itemDatas.Length);
+            MakeItem(num);
         }
     }
 

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cb0036bd47017042b232be9011e87c1, type: 3}
-  m_Name: JumpCoin
+  m_Name: SpeedCoin
   m_EditorClassIdentifier: 
-  itemName: JumpCoin
+  itemName: SpeedCoin
   itemCode: 1
   itemType: Consume
-  itemIcon: {fileID: 21300000, guid: 98f841c6ac46d174ca4f358018ab8de0, type: 3}
+  itemIcon: {fileID: 21300000, guid: 771dc6d7f27969a4fb87ecdeab54ae71, type: 3}

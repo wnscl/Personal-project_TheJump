@@ -11,7 +11,8 @@ public class BasicUi : BaseUi
     [SerializeField] Text[] statText;
 
     [SerializeField] GameObject objInfo;
-    [SerializeField] Text objText;
+    [SerializeField] Text objName;
+    [SerializeField] Text objDialog;
 
     void Start()
     {
@@ -36,8 +37,14 @@ public class BasicUi : BaseUi
     {
 
     }
-    private void OpenInfo()
+    public void OpenInfo(InfoData data)
     {
-        
+        objName.text = data.InfoName;
+        objDialog.text = data.InfoDialog;
+        objInfo.SetActive(true);
+    }
+    public void CloseInfo()
+    {
+        objInfo.SetActive (false);  
     }
 }
